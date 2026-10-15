@@ -64,3 +64,7 @@ xcodebuild -project TrashAFP.xcodeproj -scheme TrashAFP -configuration Debug bui
 Le mode démo (données fictives, builds Debug uniquement) se lance avec `--demo`, et `--demo-purge` ouvre la simulation de purge.
 
 `release.sh` produit un DMG signé Developer ID et notarisé. Il suppose votre propre certificat, votre équipe (`TEAM` dans le script) et un profil `notarytool` nommé `trashafp-notary`.
+
+## Licence
+
+[MIT](LICENSE) © 2026 Marc Christiaens
