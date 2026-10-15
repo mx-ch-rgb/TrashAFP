@@ -41,6 +41,12 @@ struct ContentView: View {
                 if scanning { ProgressView().controlSize(.small) }
                 Text(status).foregroundStyle(.secondary).lineLimit(1)
                 Spacer()
+                Button(role: .destructive) {
+                    purgeActions = Purger.plan(from: shares)
+                    showPurge = true
+                } label: { Label("Purger AFP…", systemImage: "trash") }
+                .disabled(scanning || !hasAFP)
+                .help(hasAFP ? "Simuler puis purger les références AFP" : "Aucune référence AFP détectée : rien à purger")
                 Text("\(filtered.count) résultat(s) — AFP : \(count(.afp)) · SMB : \(count(.smb))")
                     .foregroundStyle(.secondary)
             }
@@ -65,11 +71,6 @@ struct ContentView: View {
                     Label("Exporter", systemImage: "square.and.arrow.up")
                 }
                 .disabled(shares.isEmpty)
-                Button {
-                    purgeActions = Purger.plan(from: shares)
-                    showPurge = true
-                } label: { Label("Purger AFP…", systemImage: "trash") }
-                .disabled(scanning || !shares.contains { $0.proto == .afp })
             }
         }
         .sheet(isPresented: $showPurge) {
@@ -77,6 +78,8 @@ struct ContentView: View {
         }
         .task { await runScan() }
     }
+
+    private var hasAFP: Bool { shares.contains { $0.proto == .afp } }
 
     private func count(_ p: ShareProtocol) -> Int { filtered.filter { $0.proto == p }.count }
 
