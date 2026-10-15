@@ -6,6 +6,13 @@ Application macOS qui **liste tous les partages AFP et SMB** d'un Mac et aide à
 
 macOS 27 « Golden Gate » (sortie le 14 septembre 2026) a retiré complètement le protocole AFP du client macOS : tout ce qui pointe encore vers `afp://` ne fonctionne plus. TrashAFP retrouve ces références oubliées.
 
+<p align="center">
+  <img src="docs/screenshot-liste.png" width="760" alt="Liste des partages AFP et SMB"><br><br>
+  <img src="docs/screenshot-purge.png" width="560" alt="Simulation de purge AFP">
+</p>
+
+*Captures avec des données fictives.*
+
 ## Télécharger
 
 ➡️ **[TrashAFP.dmg](https://github.com/mx-ch-rgb/TrashAFP/releases/latest/download/TrashAFP.dmg)** (dernière version)
@@ -53,5 +60,7 @@ Xcode 27, projet `TrashAFP.xcodeproj` (SwiftUI, arm64, cible macOS 26).
 export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
 xcodebuild -project TrashAFP.xcodeproj -scheme TrashAFP -configuration Debug build
 ```
+
+Le mode démo (données fictives, builds Debug uniquement) se lance avec `--demo`, et `--demo-purge` ouvre la simulation de purge.
 
 `release.sh` produit un DMG signé Developer ID et notarisé. Il suppose votre propre certificat, votre équipe (`TEAM` dans le script) et un profil `notarytool` nommé `trashafp-notary`.

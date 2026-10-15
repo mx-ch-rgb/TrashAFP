@@ -18,6 +18,15 @@ struct PurgeAction: Identifiable, Hashable {
 enum Purger {
     static let afpURL = try! NSRegularExpression(pattern: #"afp://[^"'\s<>]*"#, options: [.caseInsensitive])
     static let home = NSHomeDirectory()
+    #if DEBUG
+    nonisolated(unsafe) static var assumeWritable = false   // mode démo uniquement
+    #endif
+    static func writable(_ path: String) -> Bool {
+        #if DEBUG
+        if assumeWritable { return true }
+        #endif
+        return FileManager.default.isWritableFile(atPath: path)
+    }
 
     // MARK: Plan (simulation)
 
@@ -44,7 +53,7 @@ enum Purger {
                     add(.init(kind: .manual, target: s.location, note: "Liste de favoris binaire : supprimez le favori dans le Finder"))
                 }
             case .file:
-                if fm.isWritableFile(atPath: s.location) {
+                if writable(s.location) {
                     add(.init(kind: .neutralize, target: s.location, note: "Les URL afp:// deviennent AFP_REMOVED"))
                 } else {
                     add(.init(kind: .manual, target: s.location, note: "Non modifiable sans droits administrateur"))

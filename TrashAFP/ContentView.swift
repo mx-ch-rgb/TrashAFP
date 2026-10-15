@@ -76,7 +76,20 @@ struct ContentView: View {
         .sheet(isPresented: $showPurge) {
             PurgeView(actions: purgeActions) { Task { await runScan() } }
         }
-        .task { await runScan() }
+        .task {
+            #if DEBUG
+            if Demo.isOn {
+                shares = Demo.shares
+                Purger.assumeWritable = true
+                if Demo.args.contains("--demo-afp") { protoFilter = .afp }
+                status = "Analyse terminée : \(shares.count) entrée(s)."
+                if Demo.purge { purgeActions = Purger.plan(from: shares); showPurge = true }
+                Demo.scheduleSnapshot()
+                return
+            }
+            #endif
+            await runScan()
+        }
     }
 
     private var hasAFP: Bool { shares.contains { $0.proto == .afp } }
